@@ -1,0 +1,18 @@
+#!/usr/bin/env ruby
+
+require 'amqp'
+
+EventMachine.run do
+  AMQP.connect do |connection|
+    channel  = AMQP::Channel.new(connection)
+    # topic exchange name can be any string
+    exchange = channel.topic("cony-test", durable: true)
+
+    # Subscribers.
+    channel.queue("", :exclusive => true) do |queue|
+      queue.bind(exchange, :routing_key => "#").subscribe do |headers, payload|
+        puts payload.inspect
+      end
+    end
+  end
+end
