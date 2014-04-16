@@ -22,6 +22,7 @@ Cony.configure do |config|
     host: 'localhost',
     exchange: 'organization.application'
   }
+  # config.durable = false
 end
 ```
 
