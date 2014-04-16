@@ -1,3 +1,6 @@
+require 'active_support/core_ext/string/inflections'
+
+require 'cony'
 require 'cony/amqp_connection_handler'
 
 module Cony

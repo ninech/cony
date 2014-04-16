@@ -1,4 +1,5 @@
 require 'bunny'
+require 'json'
 
 module Cony
   class AMQPConnectionHandler
