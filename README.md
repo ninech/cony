@@ -9,7 +9,9 @@ Cony sends notifications about the lifecycle of your models via AMQP.
 
 In Rails 3 and 4, add this to your Gemfile and run the bundle command.
 
-    gem 'cony'
+```ruby
+gem 'cony'
+```
 
 To configure the AMQP-Settings, use an initializer (e.g.
 `config/initializers/cony.rb`) with the following content.
