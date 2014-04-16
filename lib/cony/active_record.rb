@@ -1,0 +1,40 @@
+require 'cony/amqp_connection_handler'
+
+module Cony
+  module ActiveRecord
+
+    extend ActiveSupport::Concern
+
+    included do
+      after_create :cony_send_create_notify
+      after_update :cony_send_update_notify
+      after_destroy :cony_send_destroy_notify
+    end
+
+    def cony_send_create_notify
+      amqp_connection.publish({id: self.id}, "#{self.class.name.underscore}.mutation.create")
+    end
+
+    def cony_send_update_notify
+      amqp_connection.publish({id: self.id, changes: cony_changes}, "#{self.class.name.underscore}.mutation.update")
+    end
+
+    def cony_send_destroy_notify
+      amqp_connection.publish({id: self.id}, "#{self.class.name.underscore}.mutation.destroy")
+    end
+
+
+    private
+    def amqp_connection
+      puts 'called'
+      @amqp_connection ||= Cony::AMQPConnectionHandler.new(Cony.config.amqp)
+    end
+
+    def cony_changes
+      changes.map do |name, change|
+        {name => {old: change.first, new: change.last}}
+      end
+    end
+
+  end
+end
