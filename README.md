@@ -1,4 +1,4 @@
-# Cony
+# Cony :rabbit:
 
 Cony sends notifications about the lifecycle of your models via AMQP.
 
