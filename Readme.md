@@ -54,7 +54,7 @@ The sent JSON structure will look like this:
 
 ### Update
 
-An for a `Example::Model` model will have a routing key of
+An update for a `Example::Model` model will have a routing key of
 `example/model.mutation.update`.
 
 The sent JSON structure will look like this:
