@@ -12,21 +12,26 @@ module Cony
     end
 
     def cony_send_create_notify
-      amqp_connection.publish({id: self.id}, "#{self.class.name.underscore}.mutation.create")
+      publish(:create)
     end
 
     def cony_send_update_notify
-      amqp_connection.publish({id: self.id, changes: cony_changes}, "#{self.class.name.underscore}.mutation.update")
+      publish(:update)
     end
 
     def cony_send_destroy_notify
-      amqp_connection.publish({id: self.id}, "#{self.class.name.underscore}.mutation.destroy")
+      publish(:destroy)
     end
 
 
     private
+    def publish(type)
+      amqp_connection.publish(
+        {id: self.id, changes: cony_changes},
+        "#{self.class.name.underscore}.mutation.#{type}")
+    end
+
     def amqp_connection
-      puts 'called'
       @amqp_connection ||= Cony::AMQPConnectionHandler.new(Cony.config.amqp)
     end
 

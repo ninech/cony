@@ -42,6 +42,8 @@ end
 The routing key for the messages have a format of
 `model_name_with_underscore.mutation.action`.
 
+It will append the id of the model and the detected changes to the payload of the message.
+
 ### Create
 
 A create for a `Example::Model` model will have a routing key of
@@ -50,7 +52,13 @@ A create for a `Example::Model` model will have a routing key of
 The sent JSON structure will look like this:
 
 ```json
-{ "id": 1337 }
+{
+  "id": 1337,
+  "changes": [
+    { "name": { "old": null, "new": "value" } },
+    { "description": { "old": null, "new": "value" } }
+  ]
+}
 ```
 
 
@@ -79,6 +87,9 @@ A destroy event for a `Example::Model` model will have a routing key of
 The sent JSON structure will look like this:
 
 ```json
-{ "id": 1337 }
+{
+  "id": 1337,
+  "changes": []
+}
 ```
 
