@@ -34,3 +34,49 @@ class ExampleModel < ActiveRecord::Base
   include Cony::ActiveRecord
 end
 ```
+
+## Message Format
+
+The routing key for the messages have a format of
+`model_name_with_underscore.mutation.action`.
+
+### Create
+
+A create for a `Example::Model` model will have a routing key of
+`example/model.mutation.create`.
+
+The sent JSON structure will look like this:
+
+```json
+{ "id": 1337 }
+```
+
+
+### Update
+
+An for a `Example::Model` model will have a routing key of
+`example/model.mutation.update`.
+
+The sent JSON structure will look like this:
+
+```json
+{
+  "id": 1337,
+  "changes": [
+    { "name": { "old": "old-value", "new": "new-value" } }
+  ]
+}
+```
+
+
+### Destroy
+
+A destroy event for a `Example::Model` model will have a routing key of
+`example/model.mutation.destroy`.
+
+The sent JSON structure will look like this:
+
+```json
+{ "id": 1337 }
+```
+
