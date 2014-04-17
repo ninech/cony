@@ -97,3 +97,17 @@ The sent JSON structure will look like this:
 }
 ```
 
+### Touch
+
+When a model gets touched, the event will have a routing key of 
+`example/model.mutation.touch`.
+
+
+The sent JSON structure will look like this:
+
+```json
+{
+  "id": 1337,
+  "changes": []
+}
+```

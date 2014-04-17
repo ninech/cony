@@ -15,6 +15,7 @@ describe Cony::ActiveRecord do
         def self.after_create(callback); end
         def self.after_update(callback); end
         def self.after_destroy(callback); end
+        def self.after_touch(callback); end
         def self.name; "Anonymaus::Klass"; end
         def id; #{id}; end
         def changes; #{active_record_changes}; end
@@ -48,6 +49,13 @@ describe Cony::ActiveRecord do
     it 'uses the amqp connection to send the notify' do
       amqp_connection.should_receive(:publish).with({id: id, changes: cony_changes}, 'anonymaus/klass.mutation.destroy')
       subject.cony_send_destroy_notify
+    end
+  end
+
+  describe '#cony_send_touch_notify' do
+    it 'uses the amqp connection to send the notify' do
+      amqp_connection.should_receive(:publish).with({id: id, changes: cony_changes}, 'anonymaus/klass.mutation.touch')
+      subject.cony_send_touch_notify
     end
   end
 end

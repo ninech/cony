@@ -12,6 +12,7 @@ module Cony
       after_create :cony_send_create_notify
       after_update :cony_send_update_notify
       after_destroy :cony_send_destroy_notify
+      after_touch :cony_send_touch_notify
     end
 
     def cony_send_create_notify
@@ -24,6 +25,10 @@ module Cony
 
     def cony_send_destroy_notify
       publish(:destroy)
+    end
+
+    def cony_send_touch_notify
+      publish(:touch)
     end
 
 
