@@ -20,7 +20,10 @@ To configure the AMQP-Settings, use an initializer (e.g.
 Cony.configure do |config|
   config.amqp = {
     host: 'localhost',
-    exchange: 'organization.application'
+    exchange: 'organization.application',
+    ssl: true,
+    user: 'username',
+    pass: 'secret',
   }
   # config.durable = false
 end
