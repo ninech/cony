@@ -48,4 +48,34 @@ describe Cony::AMQPConnectionHandler do
     subject.publish(message, routing_key)
   end
 
+  describe 'error handling' do
+    before do
+      Bunny.stub(:run).and_raise('I failed so hard')
+    end
+
+    it 'does not raise an error' do
+      expect { subject.publish(message, routing_key) }.to_not raise_error
+    end
+
+    context 'Rails loaded' do
+      before do
+        stub_const('Rails', OpenStruct.new(logger: double('Railslogger')))
+      end
+      it 'logs an error' do
+        expect(Rails.logger).to receive(:error).with("RuntimeError: I failed so hard")
+        subject.publish(message, routing_key)
+      end
+    end
+
+    context 'Airbrake loaded' do
+      before do
+        stub_const('Airbrake', double('Airbrake'))
+      end
+      it 'sends the error' do
+        expect(Airbrake).to receive(:notify_or_ignore).with(instance_of(RuntimeError))
+        subject.publish(message, routing_key)
+      end
+    end
+  end
+
 end
