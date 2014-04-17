@@ -1,4 +1,4 @@
-z# :rabbit: Cony [![Build Status](https://travis-ci.org/ninech/cony.svg)](https://travis-ci.org/ninech/cony)
+# :rabbit: Cony [![Build Status](https://travis-ci.org/ninech/cony.svg)](https://travis-ci.org/ninech/cony)
 
 Cony sends notifications about the lifecycle of your models via AMQP.
 
