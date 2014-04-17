@@ -13,7 +13,8 @@ module Cony
   include ActiveSupport::Configurable
 
   defaults = {
-    durable: false
+    durable: false,
+    test_mode: false,
   }
 
   self.config.merge! defaults.deep_dup

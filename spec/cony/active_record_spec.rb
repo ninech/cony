@@ -50,4 +50,15 @@ describe Cony::ActiveRecord do
       subject.cony_send_destroy_notify
     end
   end
+
+  context 'test mode enabled' do
+    before do
+      Cony.config.stub(:test_mode).and_return(true)
+    end
+    it 'does not send the message' do
+      expect(Cony::AMQPConnectionHandler).to_not receive(:new)
+      subject.cony_send_create_notify
+    end
+  end
+
 end

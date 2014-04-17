@@ -29,6 +29,7 @@ module Cony
 
     private
     def publish(type)
+      return if Cony.config.test_mode
       amqp_connection.publish(
         {id: self.id, changes: cony_changes},
         "#{self.class.name.underscore}.mutation.#{type}")
