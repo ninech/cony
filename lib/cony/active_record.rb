@@ -15,15 +15,15 @@ module Cony
     end
 
     def cony_send_create_notify
-      publish(:create)
+      publish(:created)
     end
 
     def cony_send_update_notify
-      publish(:update)
+      publish(:updated)
     end
 
     def cony_send_destroy_notify
-      publish(:destroy)
+      publish(:destroyed)
     end
 
 
@@ -31,7 +31,7 @@ module Cony
     def publish(type)
       return if Cony.config.test_mode
       amqp_connection.publish(
-        {id: self.id, changes: cony_changes},
+        {id: self.id, changes: cony_changes, model: self.class.name, event: type},
         "#{self.class.name.underscore}.mutation.#{type}")
     end
 
