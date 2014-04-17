@@ -8,6 +8,14 @@ describe Cony::ActiveRecord do
   let(:id) { 1337 }
   let(:active_record_changes) { {name: ['old', 'new']} }
   let(:cony_changes) { [{name: {old: 'old', new: 'new'}}] }
+  let(:expected_payload) do
+    {
+      id: id,
+      changes: cony_changes,
+      model: 'Anonymaus::Klass',
+      event: event,
+    }
+  end
 
   let(:model) do
     eval <<-EOF
@@ -31,22 +39,25 @@ describe Cony::ActiveRecord do
   subject { model.new }
 
   describe '#cony_send_create_notify' do
+    let(:event) { :created }
     it 'uses the amqp connection to send the notify' do
-      amqp_connection.should_receive(:publish).with({id: id, changes: cony_changes}, 'anonymaus/klass.mutation.create')
+      amqp_connection.should_receive(:publish).with(expected_payload, 'anonymaus/klass.mutation.created')
       subject.cony_send_create_notify
     end
   end
 
   describe '#cony_send_update_notify' do
+    let(:event) { :updated }
     it 'uses the amqp connection to send the notify' do
-      amqp_connection.should_receive(:publish).with({id: id, changes: cony_changes}, 'anonymaus/klass.mutation.update')
+      amqp_connection.should_receive(:publish).with(expected_payload, 'anonymaus/klass.mutation.updated')
       subject.cony_send_update_notify
     end
   end
 
   describe '#cony_send_destroy_notify' do
+    let(:event) { :destroyed }
     it 'uses the amqp connection to send the notify' do
-      amqp_connection.should_receive(:publish).with({id: id, changes: cony_changes}, 'anonymaus/klass.mutation.destroy')
+      amqp_connection.should_receive(:publish).with(expected_payload, 'anonymaus/klass.mutation.destroyed')
       subject.cony_send_destroy_notify
     end
   end

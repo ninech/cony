@@ -45,14 +45,14 @@ end
 ## Message Format
 
 The routing key for the messages have a format of
-`model_name_with_underscore.mutation.action`.
+`model_name_with_underscore.mutation.event_type`.
 
 It will append the id of the model and the detected changes to the payload of the message.
 
 ### Create
 
 A create for a `Example::Model` model will have a routing key of
-`example/model.mutation.create`.
+`example/model.mutation.created`.
 
 The sent JSON structure will look like this:
 
@@ -62,7 +62,9 @@ The sent JSON structure will look like this:
   "changes": [
     { "name": { "old": null, "new": "value" } },
     { "description": { "old": null, "new": "value" } }
-  ]
+  ],
+  "event": "created",
+  "model": "Example::Model",
 }
 ```
 
@@ -70,7 +72,7 @@ The sent JSON structure will look like this:
 ### Update
 
 An update for a `Example::Model` model will have a routing key of
-`example/model.mutation.update`.
+`example/model.mutation.updated`.
 
 The sent JSON structure will look like this:
 
@@ -79,7 +81,9 @@ The sent JSON structure will look like this:
   "id": 1337,
   "changes": [
     { "name": { "old": "old-value", "new": "new-value" } }
-  ]
+  ],
+  "event": "updated",
+  "model": "Example::Model",
 }
 ```
 
@@ -87,14 +91,16 @@ The sent JSON structure will look like this:
 ### Destroy
 
 A destroy event for a `Example::Model` model will have a routing key of
-`example/model.mutation.destroy`.
+`example/model.mutation.destroyed`.
 
 The sent JSON structure will look like this:
 
 ```json
 {
   "id": 1337,
-  "changes": []
+  "changes": [],
+  "event": "destroyed",
+  "model": "Example::Model",
 }
 ```
 
