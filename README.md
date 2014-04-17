@@ -25,6 +25,7 @@ Cony.configure do |config|
     user: 'username',
     pass: 'secret',
   }
+  config.test_mode = Rails.env.test?
   # config.durable = false
 end
 ```
