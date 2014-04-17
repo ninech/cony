@@ -1,4 +1,5 @@
 require 'spec_helper'
+require 'ostruct'
 
 require 'cony/amqp_connection_handler'
 
