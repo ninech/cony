@@ -98,7 +98,9 @@ The sent JSON structure will look like this:
 ```json
 {
   "id": 1337,
-  "changes": [],
+  "changes": [
+    { "name": { "old": "value", "new": null } }
+  ],
   "event": "destroyed",
   "model": "Example::Model",
 }
