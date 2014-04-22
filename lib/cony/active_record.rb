@@ -15,20 +15,20 @@ module Cony
     end
 
     def cony_send_create_notify
-      publish(:created)
+      publish(:created, cony_changes_created)
     end
 
     def cony_send_update_notify
-      publish(:updated)
+      publish(:updated, cony_changes_updated)
     end
 
     def cony_send_destroy_notify
-      publish(:destroyed)
+      publish(:destroyed, cony_changes_destroyed)
     end
 
 
     private
-    def publish(type)
+    def publish(type, cony_changes)
       return if Cony.config.test_mode
       amqp_connection.publish(
         {id: self.id, changes: cony_changes, model: self.class.name, event: type},
@@ -39,11 +39,24 @@ module Cony
       @amqp_connection ||= Cony::AMQPConnectionHandler.new(Cony.config.amqp)
     end
 
-    def cony_changes
+    def mapped_changes
       changes.map do |name, change|
         {name => {old: change.first, new: change.last}}
       end
     end
 
+    def cony_changes_created
+      mapped_changes
+    end
+
+    def cony_changes_updated
+      mapped_changes
+    end
+
+    def cony_changes_destroyed
+      attributes.map do |name, value|
+        {name => {old: value, new: nil}}
+      end
+    end
   end
 end
