@@ -7,7 +7,7 @@ describe Cony::ActiveRecord do
   let(:amqp_connection) { double('Cony::AMQPConnectionHandler') }
   let(:id) { 1337 }
   let(:active_record_changes) { {name: ['old', 'new']} }
-  let(:active_record_attributes) { {name: 'old'} }
+  let(:active_record_attributes) { {name: 'value'} }
   let(:cony_changes) { [{name: {old: 'old', new: 'new'}}] }
   let(:expected_payload) do
     {
@@ -58,7 +58,7 @@ describe Cony::ActiveRecord do
 
   describe '#cony_send_destroy_notify' do
     let(:event) { :destroyed }
-    let(:cony_changes) { [{name: {old: 'old', new: nil}}] }
+    let(:cony_changes) { [{name: {old: 'value', new: nil}}] }
     it 'uses the amqp connection to send the notify' do
       amqp_connection.should_receive(:publish).with(expected_payload, 'anonymaus/klass.mutation.destroyed')
       subject.cony_send_destroy_notify
