@@ -9,48 +9,48 @@ module Cony
     extend ActiveSupport::Concern
 
     included do
-      after_create :cony_send_create_notify
-      after_update :cony_send_update_notify
-      after_destroy :cony_send_destroy_notify
+      after_create :cony_save_create_notify_data
+      after_update :cony_save_update_notify_data
+      after_destroy :cony_save_destroy_notify_data
+      after_commit :cony_publish
     end
 
-    def cony_send_create_notify
-      publish(:created, cony_changes_created)
+    def cony_save_create_notify_data
+      @cony_notify = { event: :created, changes: cony_changes_created }
     end
 
-    def cony_send_update_notify
-      publish(:updated, cony_changes_updated)
+    def cony_save_update_notify_data
+      @cony_notify = { event: :updated, changes: cony_changes_updated }
     end
 
-    def cony_send_destroy_notify
-      publish(:destroyed, cony_changes_destroyed)
+    def cony_save_destroy_notify_data
+      @cony_notify = { event: :destroyed, changes: cony_changes_destroyed }
     end
 
+    def cony_publish
+      return if Cony.config.test_mode
+      cony_amqp_connection.publish(
+        {id: self.id, changes: @cony_notify[:changes], model: self.class.name, event: @cony_notify[:event]},
+        "#{self.class.name.underscore}.mutation.#{@cony_notify[:event]}")
+    end
 
     private
-    def publish(type, cony_changes)
-      return if Cony.config.test_mode
-      amqp_connection.publish(
-        {id: self.id, changes: cony_changes, model: self.class.name, event: type},
-        "#{self.class.name.underscore}.mutation.#{type}")
+    def cony_amqp_connection
+      @cony_amqp_connection ||= Cony::AMQPConnectionHandler.new(Cony.config.amqp)
     end
 
-    def amqp_connection
-      @amqp_connection ||= Cony::AMQPConnectionHandler.new(Cony.config.amqp)
-    end
-
-    def mapped_changes
+    def cony_mapped_changes
       changes.map do |name, change|
         {name => {old: change.first, new: change.last}}
       end
     end
 
     def cony_changes_created
-      mapped_changes
+      cony_mapped_changes
     end
 
     def cony_changes_updated
-      mapped_changes
+      cony_mapped_changes
     end
 
     def cony_changes_destroyed
