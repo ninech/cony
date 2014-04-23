@@ -16,15 +16,15 @@ module Cony
     end
 
     def cony_save_create_notify_data
-      save_notify :created, cony_changes_created
+      cony_prepare_notify :created, cony_changes_created
     end
 
     def cony_save_update_notify_data
-      save_notify :updated, cony_changes_updated
+      cony_prepare_notify :updated, cony_changes_updated
     end
 
     def cony_save_destroy_notify_data
-      save_notify :destroyed, cony_changes_destroyed
+      cony_prepare_notify :destroyed, cony_changes_destroyed
     end
 
     def cony_publish
@@ -65,8 +65,8 @@ module Cony
       "#{self.class.name.underscore}.mutation.#{@cony_notify[:event]}"
     end
     
-    def save_notify(event, changes)
-      @cony_notify = { event: event, changes: changes 
+    def cony_prepare_notify(event, changes)
+      @cony_notify = { event: event, changes: changes }
     end
   end
 end
