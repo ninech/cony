@@ -24,6 +24,7 @@ describe Cony::ActiveRecord do
         def self.after_create(callback); end
         def self.after_update(callback); end
         def self.after_destroy(callback); end
+        def self.after_commit(callback); end
         def self.name; "Anonymaus::Klass"; end
         def id; #{id}; end
         def changes; #{active_record_changes}; end
@@ -44,7 +45,8 @@ describe Cony::ActiveRecord do
     let(:event) { :created }
     it 'uses the amqp connection to send the notify' do
       amqp_connection.should_receive(:publish).with(expected_payload, 'anonymaus/klass.mutation.created')
-      subject.cony_send_create_notify
+      subject.cony_save_create_notify_data
+      subject.cony_publish
     end
   end
 
@@ -52,7 +54,8 @@ describe Cony::ActiveRecord do
     let(:event) { :updated }
     it 'uses the amqp connection to send the notify' do
       amqp_connection.should_receive(:publish).with(expected_payload, 'anonymaus/klass.mutation.updated')
-      subject.cony_send_update_notify
+      subject.cony_save_update_notify_data
+      subject.cony_publish
     end
   end
 
@@ -61,7 +64,8 @@ describe Cony::ActiveRecord do
     let(:cony_changes) { [{name: {old: 'value', new: nil}}] }
     it 'uses the amqp connection to send the notify' do
       amqp_connection.should_receive(:publish).with(expected_payload, 'anonymaus/klass.mutation.destroyed')
-      subject.cony_send_destroy_notify
+      subject.cony_save_destroy_notify_data
+      subject.cony_publish
     end
   end
 
@@ -71,7 +75,8 @@ describe Cony::ActiveRecord do
     end
     it 'does not send the message' do
       expect(Cony::AMQPConnectionHandler).to_not receive(:new)
-      subject.cony_send_create_notify
+      subject.cony_save_create_notify_data
+      subject.cony_publish
     end
   end
 
