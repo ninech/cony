@@ -10,7 +10,7 @@ Gem::Specification.new do |s|
   s.homepage    = 'http://github.com/ninech/'
   s.license     = 'MIT'
   s.summary     = 'Automatically sends notifications via AMQP when a model has been changed.'
-  s.description     = 'Automatically sends notifications via AMQP when a model has been changed.'
+  s.description = 'Automatically sends notifications via AMQP when a model has been changed.'
 
   s.files         = `git ls-files`.split("\n")
   s.test_files    = `git ls-files -- {test,spec,features}/*`.split("\n")
