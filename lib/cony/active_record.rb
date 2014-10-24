@@ -11,6 +11,7 @@ module Cony
     included do
       after_create :cony_save_create_notify_data
       after_update :cony_save_update_notify_data
+      after_touch  :cony_save_update_notify_data if respond_to?(:after_touch)
       after_destroy :cony_save_destroy_notify_data
       after_commit :cony_publish
     end
@@ -56,15 +57,15 @@ module Cony
         {name => {old: value, new: nil}}
       end
     end
-    
+
     def cony_notify_hash
       {id: self.id, changes: @cony_notify[:changes], model: self.class.name, event: @cony_notify[:event]}
     end
-    
+
     def cony_notify_routing_key
       "#{self.class.name.underscore}.mutation.#{@cony_notify[:event]}"
     end
-    
+
     def cony_prepare_notify(event, changes)
       @cony_notify = { event: event, changes: changes }
     end
