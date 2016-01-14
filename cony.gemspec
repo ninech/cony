@@ -5,8 +5,8 @@ $:.push File.expand_path('../lib', __FILE__)
 Gem::Specification.new do |s|
   s.name        = 'cony'
   s.version     = File.read(File.expand_path('../VERSION', __FILE__)).strip
-  s.authors     = ['Raffael Schmid']
-  s.email       = ['info@nine.ch']
+  s.authors     = ['nine.ch Development-Team']
+  s.email       = ['development@nine.ch']
   s.homepage    = 'http://github.com/ninech/'
   s.license     = 'MIT'
   s.summary     = 'Automatically sends notifications via AMQP when a model has been changed.'
@@ -21,5 +21,5 @@ Gem::Specification.new do |s|
   s.add_development_dependency 'rspec', '~> 2.12'
 
   s.add_runtime_dependency 'activesupport', '>= 3'
-  s.add_runtime_dependency 'bunny', '~> 1.1.7'
+  s.add_runtime_dependency 'bunny', '~> 1.7.0'
 end
