@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    cony (1.4.1)
+    cony (1.5.0)
       activesupport (>= 3)
       bunny (~> 1.7.0)
 
