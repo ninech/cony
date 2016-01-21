@@ -10,7 +10,8 @@ module Cony
 
     def publish(message, routing_key)
       Bunny.run(@config) do |connection|
-        exchange = connection.exchange(@config[:exchange], type: :topic, durable: Cony.config.durable)
+        channel = connection.create_channel
+        exchange = channel.topic(@config[:exchange], durable: Cony.config.durable)
         exchange.publish(message.to_json,
                          key: routing_key,
                          mandatory: false,

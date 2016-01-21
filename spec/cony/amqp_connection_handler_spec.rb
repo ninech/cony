@@ -14,9 +14,14 @@ describe Cony::AMQPConnectionHandler do
       exc.stub(:publish)
     end
   end
+  let(:channel_double) do
+    double('Channel double').tap do |channel|
+      channel.stub(:topic).and_return(exchange_double)
+    end
+  end
   let(:connection_double) do
     double('Connection double').tap do |conn|
-      conn.stub(:exchange).and_return(exchange_double)
+      conn.stub(:create_channel).and_return(channel_double)
     end
   end
 
@@ -32,7 +37,7 @@ describe Cony::AMQPConnectionHandler do
   end
 
   it 'configures the exchange correctly' do
-    connection_double.should_receive(:exchange).with('bunny-tests', type: :topic, durable: false)
+    channel_double.should_receive(:topic).with('bunny-tests', durable: false)
     subject.publish(message, routing_key)
   end
 
