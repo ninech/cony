@@ -78,7 +78,7 @@ describe Cony::AMQPConnectionHandler do
         stub_const('Airbrake', double('Airbrake'))
       end
       it 'sends the error' do
-        expect(Airbrake).to receive(:notify_or_ignore).with(instance_of(RuntimeError))
+        expect(Airbrake).to receive(:notify).with(instance_of(RuntimeError))
         subject.publish(message, routing_key)
       end
     end

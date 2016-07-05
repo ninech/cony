@@ -20,7 +20,7 @@ module Cony
                          content_type: 'application/json')
       end
     rescue => error
-      Airbrake.notify_or_ignore(error) if defined?(Airbrake)
+      Airbrake.notify(error) if defined?(Airbrake)
       Rails.logger.error("#{error.class}: #{error}") if defined?(Rails)
     end
 
