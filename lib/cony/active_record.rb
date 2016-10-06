@@ -4,6 +4,15 @@ require 'cony'
 require 'cony/amqp_connection'
 
 module Cony
+  ##
+  # Usage:
+  # <code>
+  # class FooBar < ActiveRecord::Base
+  #   include Cony::ActiveRecord
+  #   # your things here
+  # end
+  # </code>
+  #
   module ActiveRecord
     extend ActiveSupport::Concern
 
