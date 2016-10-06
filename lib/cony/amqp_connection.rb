@@ -18,8 +18,6 @@ module Cony
     # :category: Internal
     # Sends the status change message to the configured AMQP destination
     def publish(message, routing_key)
-      channel = connection.create_channel
-      exchange = channel.topic(Cony.config.amqp[:exchange], durable: Cony.config.durable)
       exchange.publish(message.to_json,
                        key: routing_key,
                        mandatory: false,
@@ -60,6 +58,12 @@ module Cony
     end
 
     private
+
+    def exchange
+      connection.
+        create_channel.
+        topic(Cony.config.amqp[:exchange], durable: Cony.config.durable)
+    end
 
     def cleanup
       @connection.close if valid_connection?
