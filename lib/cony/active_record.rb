@@ -5,7 +5,6 @@ require 'cony/amqp_connection_handler'
 
 module Cony
   module ActiveRecord
-
     extend ActiveSupport::Concern
 
     included do
@@ -34,6 +33,7 @@ module Cony
     end
 
     private
+
     def cony_amqp_connection
       @cony_amqp_connection ||= Cony::AMQPConnectionHandler.new(Cony.config.amqp)
     end

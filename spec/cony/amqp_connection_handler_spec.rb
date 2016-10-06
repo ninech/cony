@@ -16,23 +16,25 @@ describe Cony::AMQPConnectionHandler do
   end
   let(:channel_double) do
     double('Channel double').tap do |channel|
-      allow(channel).to receive(:topic).and_return(exchange_double)
+      allow(channel).to receive(:topic).and_return exchange_double
     end
   end
   let(:connection_double) do
     double('Connection double').tap do |conn|
-      allow(conn).to receive(:create_channel).and_return(channel_double)
+      allow(conn).to receive(:start).and_return conn
+      allow(conn).to receive(:closed?).and_return false
+      allow(conn).to receive(:create_channel).and_return channel_double
     end
   end
 
   subject { handler }
 
   before do
-    allow(Bunny).to receive(:run).and_yield(connection_double)
+    allow(Bunny).to receive(:new).and_return connection_double
   end
 
-  it 'uses bunny to publish a message' do
-    expect(Bunny).to receive(:run)
+  it 'creates a new bunny session' do
+    expect(Bunny).to receive(:new).and_return(connection_double)
     subject.publish(message, routing_key)
   end
 
@@ -54,9 +56,23 @@ describe Cony::AMQPConnectionHandler do
     subject.publish(message, routing_key)
   end
 
+  it 'reuses bunny session' do
+    expect(Bunny).to receive(:new).and_return(connection_double).once
+    subject.publish(message, routing_key)
+    subject.publish(message, routing_key)
+  end
+
+  context 'provided bunny connection' do
+    before do
+      let(:handler) { Cony::AMQPConnectionHandler.new(config, connection_double) }
+    end
+
+
+  end
+
   describe 'error handling' do
     before do
-      allow(Bunny).to receive(:run).and_raise('I failed so hard')
+      allow(Bunny).to receive(:new).and_raise('I failed so hard')
     end
 
     it 'does not raise an error' do
