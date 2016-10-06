@@ -1,7 +1,7 @@
 require 'active_support/core_ext/string/inflections'
 
 require 'cony'
-require 'cony/amqp_connection_handler'
+require 'cony/amqp_connection'
 
 module Cony
   module ActiveRecord
@@ -29,14 +29,11 @@ module Cony
 
     def cony_publish
       return if Cony.config.test_mode
-      cony_amqp_connection.publish(cony_notify_hash, cony_notify_routing_key)
+
+      Cony::AMQPConnection.publish(cony_notify_hash, cony_notify_routing_key)
     end
 
     private
-
-    def cony_amqp_connection
-      @cony_amqp_connection ||= Cony::AMQPConnectionHandler.new(Cony.config.amqp)
-    end
 
     def cony_mapped_changes
       changes.map do |name, change|

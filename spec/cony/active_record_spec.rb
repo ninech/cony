@@ -4,7 +4,7 @@ require 'cony/active_record'
 
 describe Cony::ActiveRecord do
 
-  let(:amqp_connection) { double('Cony::AMQPConnectionHandler') }
+  let(:amqp_connection) { double('Cony::AMQPConnection') }
   let(:id) { 1337 }
   let(:active_record_changes) { {name: ['old', 'new']} }
   let(:active_record_attributes) { {name: 'value'} }
@@ -36,7 +36,7 @@ describe Cony::ActiveRecord do
   end
 
   before do
-    allow(Cony::AMQPConnectionHandler).to receive(:new).and_return(amqp_connection)
+    allow(Cony::AMQPConnection).to receive(:instance).and_return(amqp_connection)
   end
 
   subject { model.new }
@@ -74,7 +74,7 @@ describe Cony::ActiveRecord do
       allow(Cony.config).to receive(:test_mode).and_return(true)
     end
     it 'does not send the message' do
-      expect(Cony::AMQPConnectionHandler).to_not receive(:new)
+      expect(Cony::AMQPConnection).to_not receive(:instance)
       subject.cony_save_create_notify_data
       subject.cony_publish
     end

@@ -1,18 +1,18 @@
 require 'bunny'
 require 'json'
+require 'singleton'
 
 module Cony
-  class AMQPConnectionHandler
-    def initialize(config, connection = nil)
-      @config = config
-      @connection = connection
+  class AMQPConnection
+    include Singleton
 
-      @connection.start unless @connection.nil? || @connection.open?
+    def self.publish(message, routing_key)
+      instance.publish(message, routing_key)
     end
 
     def publish(message, routing_key)
       channel = connection.create_channel
-      exchange = channel.topic(@config[:exchange], durable: Cony.config.durable)
+      exchange = channel.topic(Cony.config.amqp[:exchange], durable: Cony.config.durable)
       exchange.publish(message.to_json,
                        key: routing_key,
                        mandatory: false,
@@ -29,7 +29,7 @@ module Cony
     def connection
       return @connection unless @connection.nil? || @connection.closed?
 
-      @connection = Bunny.new @config
+      @connection = Bunny.new Cony.config.amqp
       ObjectSpace.define_finalizer(self, proc { cleanup })
       @connection.start
     end

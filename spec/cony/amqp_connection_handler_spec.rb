@@ -1,12 +1,18 @@
 require 'spec_helper'
 require 'ostruct'
 
-require 'cony/amqp_connection_handler'
+require 'cony/amqp_connection'
 
-describe Cony::AMQPConnectionHandler do
+describe Cony::AMQPConnection do
 
-  let(:config) { {exchange: 'bunny-tests'} }
-  let(:handler) { Cony::AMQPConnectionHandler.new(config) }
+  let(:amqp_config) { {exchange: 'bunny-tests'} }
+  let(:config) {
+    double('Cony Config').tap do |config|
+      allow(config).to receive(:amqp).and_return amqp_config
+      allow(config).to receive(:durable).and_return false
+    end
+  }
+  let(:handler) { Cony::AMQPConnection }
   let(:message) { 'Bunnies are connies' }
   let(:routing_key) { 'bunny.info' }
   let(:exchange_double) do
@@ -27,10 +33,14 @@ describe Cony::AMQPConnectionHandler do
     end
   end
 
-  subject { handler }
+  subject do
+    # clone is necessary, because AMQPConnection is a Singleton
+    handler.clone
+  end
 
   before do
     allow(Bunny).to receive(:new).and_return connection_double
+    allow(Cony).to receive(:config).and_return config
   end
 
   it 'creates a new bunny session' do
@@ -60,14 +70,6 @@ describe Cony::AMQPConnectionHandler do
     expect(Bunny).to receive(:new).and_return(connection_double).once
     subject.publish(message, routing_key)
     subject.publish(message, routing_key)
-  end
-
-  context 'provided bunny connection' do
-    before do
-      let(:handler) { Cony::AMQPConnectionHandler.new(config, connection_double) }
-    end
-
-
   end
 
   describe 'error handling' do
