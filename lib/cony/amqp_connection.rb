@@ -24,18 +24,30 @@ module Cony
       Rails.logger.error("#{error.class}: #{error}") if defined? Rails
     end
 
-    private
+    def connection=(connection)
+      @connection = connection if invalid_connection?
+    end
 
     def connection
-      return @connection unless @connection.nil? || @connection.closed?
+      return @connection if valid_connection?
 
       @connection = Bunny.new Cony.config.amqp
       ObjectSpace.define_finalizer(self, proc { cleanup })
       @connection.start
     end
 
+    def invalid_connection?
+      @connection.nil? || @connection.closed?
+    end
+
+    def valid_connection?
+      !invalid_connection?
+    end
+
+    private
+
     def cleanup
-      @connection.close unless @connection.closed?
+      @connection.close if valid_connection?
     end
   end
 end
