@@ -19,8 +19,8 @@ Gem::Specification.new do |s|
 
   s.required_ruby_version = '>= 2.0'
 
-  s.add_development_dependency 'rake', '~> 10.0'
-  s.add_development_dependency 'rspec', '~> 2.12'
+  s.add_development_dependency 'rake', '~> 11.0'
+  s.add_development_dependency 'rspec', '~> 3.0'
 
   s.add_runtime_dependency 'activesupport', '>= 3'
   s.add_runtime_dependency 'bunny', '~> 2.3'

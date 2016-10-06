@@ -11,33 +11,33 @@ describe Cony::AMQPConnectionHandler do
   let(:routing_key) { 'bunny.info' }
   let(:exchange_double) do
     double('Exchange double').tap do |exc|
-      exc.stub(:publish)
+      allow(exc).to receive(:publish)
     end
   end
   let(:channel_double) do
     double('Channel double').tap do |channel|
-      channel.stub(:topic).and_return(exchange_double)
+      allow(channel).to receive(:topic).and_return(exchange_double)
     end
   end
   let(:connection_double) do
     double('Connection double').tap do |conn|
-      conn.stub(:create_channel).and_return(channel_double)
+      allow(conn).to receive(:create_channel).and_return(channel_double)
     end
   end
 
   subject { handler }
 
   before do
-    Bunny.stub(:run).and_yield(connection_double)
+    allow(Bunny).to receive(:run).and_yield(connection_double)
   end
 
   it 'uses bunny to publish a message' do
-    Bunny.should_receive(:run)
+    expect(Bunny).to receive(:run)
     subject.publish(message, routing_key)
   end
 
   it 'configures the exchange correctly' do
-    channel_double.should_receive(:topic).with('bunny-tests', durable: false)
+    expect(channel_double).to receive(:topic).with('bunny-tests', durable: false)
     subject.publish(message, routing_key)
   end
 
@@ -49,14 +49,14 @@ describe Cony::AMQPConnectionHandler do
       persistent: false,
       content_type: 'application/json',
     }
-    exchange_double.should_receive(:publish)
+    expect(exchange_double).to receive(:publish)
       .with('"Bunnies are connies"', publish_options)
     subject.publish(message, routing_key)
   end
 
   describe 'error handling' do
     before do
-      Bunny.stub(:run).and_raise('I failed so hard')
+      allow(Bunny).to receive(:run).and_raise('I failed so hard')
     end
 
     it 'does not raise an error' do
