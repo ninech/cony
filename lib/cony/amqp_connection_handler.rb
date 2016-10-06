@@ -3,9 +3,11 @@ require 'json'
 
 module Cony
   class AMQPConnectionHandler
-
-    def initialize(config)
+    def initialize(config, connection = nil)
       @config = config
+      @connection = connection
+
+      @connection.start unless @connection.nil? || @connection.open?
     end
 
     def publish(message, routing_key)
