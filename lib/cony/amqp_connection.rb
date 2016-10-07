@@ -1,6 +1,7 @@
 require 'bunny'
 require 'json'
 require 'singleton'
+require 'cony/valid_connection_already_defined'
 
 module Cony
   ##
@@ -32,13 +33,14 @@ module Cony
     ##
     # Sets a custom connection if no valid_connection? is already provided
     def connection=(connection)
-      @connection = connection if invalid_connection?
+      raise Cony::ValidConnectionAlreadyDefined.new if valid_connection_present?
+      @connection = connection
     end
 
     ##
     # Returns the existing connection or creates a new connection
     def connection
-      return @connection if valid_connection?
+      return @connection if valid_connection_present?
 
       @connection = Bunny.new Cony.config.amqp
       ObjectSpace.define_finalizer(self, proc { cleanup })
@@ -46,15 +48,9 @@ module Cony
     end
 
     ##
-    # +true+ if there's currently no connection or the connection has been closed
-    def invalid_connection?
-      @connection.nil? || @connection.closed?
-    end
-
-    ##
     # +false+ if invalid_connection? is +true+
-    def valid_connection?
-      !invalid_connection?
+    def valid_connection_present?
+      !@connection.nil? && @connection.open?
     end
 
     private
@@ -66,7 +62,7 @@ module Cony
     end
 
     def cleanup
-      @connection.close if valid_connection?
+      @connection.close if valid_connection_present?
     end
   end
 end

@@ -2,15 +2,11 @@ require 'spec_helper'
 require 'ostruct'
 
 require 'cony/amqp_connection'
+require 'cony/valid_connection_already_defined'
 
 describe Cony::AMQPConnection do
   let(:amqp_config) { { exchange: 'bunny-tests' } }
-  let(:config) do
-    double('Cony Config').tap do |config|
-      allow(config).to receive(:amqp).and_return amqp_config
-      allow(config).to receive(:durable).and_return false
-    end
-  end
+  let(:config) { double('Cony Config', amqp: amqp_config, durable: false) }
   let(:handler) { Cony::AMQPConnection }
   let(:message) { 'Bunnies are connies' }
   let(:routing_key) { 'bunny.info' }
@@ -25,10 +21,8 @@ describe Cony::AMQPConnection do
     end
   end
   let(:connection_double) do
-    double('Connection double').tap do |conn|
+    double('Bunny::Session', closed?: false, open?: true, create_channel: channel_double).tap do |conn|
       allow(conn).to receive(:start).and_return conn
-      allow(conn).to receive(:closed?).and_return false
-      allow(conn).to receive(:create_channel).and_return channel_double
     end
   end
 
@@ -97,6 +91,22 @@ describe Cony::AMQPConnection do
         expect(Airbrake).to receive(:notify).with(instance_of(RuntimeError))
         subject.publish(message, routing_key)
       end
+    end
+  end
+
+  describe 'setting a connection' do
+    let(:existing_connection) { connection_double.clone }
+
+    it 'sets the connection to the given one' do
+      subject.instance.connection = existing_connection
+
+      expect(subject.instance.connection).to be(existing_connection)
+    end
+
+    it 'raises exception when redefining the connection' do
+      expect(subject.instance.connection).to be(connection_double)
+      expect { subject.instance.connection = existing_connection }.
+        to raise_error(Cony::ValidConnectionAlreadyDefined)
     end
   end
 end

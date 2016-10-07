@@ -39,8 +39,8 @@ Cony::AMQPConnection.instance.connection = your_connection
 ```
 
 Cony will only accept the given connection if it's current connection is closed or if there is no current
-connection. There will be **no** error if Cony uses it's current connection in favor of the provided
-connection!
+connection. There will be an error if Cony already has a connection!
+This restriction is imposed because else Cony might leak connections.
 
 ## Getting Started
 
