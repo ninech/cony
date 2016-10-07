@@ -33,7 +33,7 @@ module Cony
     ##
     # Sets a custom connection if no valid_connection? is already provided
     def connection=(connection)
-      raise Cony::ValidConnectionAlreadyDefined.new if valid_connection_present?
+      fail Cony::ValidConnectionAlreadyDefined, 'A connection has already been set.' if valid_connection_present?
       @connection = connection
     end
 
