@@ -15,11 +15,7 @@ describe Cony::AMQPConnection do
       allow(exc).to receive(:publish)
     end
   end
-  let(:channel_double) do
-    double('Channel double').tap do |channel|
-      allow(channel).to receive(:topic).and_return exchange_double
-    end
-  end
+  let(:channel_double) { double('Channel double', topic: exchange_double) }
   let(:connection_double) do
     double('Bunny::Session', closed?: false, open?: true, create_channel: channel_double).tap do |conn|
       allow(conn).to receive(:start).and_return conn
