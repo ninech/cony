@@ -75,7 +75,7 @@ The sent JSON structure will look like this:
     { "description": { "old": null, "new": "value" } }
   ],
   "event": "created",
-  "model": "Example::Model",
+  "model": "Example::Model"
 }
 ```
 
@@ -94,7 +94,7 @@ The sent JSON structure will look like this:
     { "name": { "old": "old-value", "new": "new-value" } }
   ],
   "event": "updated",
-  "model": "Example::Model",
+  "model": "Example::Model"
 }
 ```
 
@@ -113,7 +113,7 @@ The sent JSON structure will look like this:
     { "name": { "old": "value", "new": null } }
   ],
   "event": "destroyed",
-  "model": "Example::Model",
+  "model": "Example::Model"
 }
 ```
 
