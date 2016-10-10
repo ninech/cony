@@ -121,6 +121,16 @@ describe Cony::AMQPConnection do
         expect { subject.instance.connection = existing_connection }.
           to raise_error(Cony::ValidConnectionAlreadyDefined)
       end
+
+      describe 'no amqp config hash given' do
+        let(:config) do
+          double('Cony Config', amqp: nil, durable: false, amqp_connection: existing_connection)
+        end
+
+        it 'still uses the connection from the config' do
+          expect(subject.instance.connection).to be(existing_connection)
+        end
+      end
     end
   end
 end
