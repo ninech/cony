@@ -6,7 +6,7 @@ require 'cony/valid_connection_already_defined'
 
 describe Cony::AMQPConnection do
   let(:amqp_config) { { exchange: 'bunny-tests' } }
-  let(:config) { double('Cony Config', amqp: amqp_config, durable: false) }
+  let(:config) { double('Cony Config', amqp: amqp_config, durable: false, amqp_connection: nil) }
   let(:handler) { Cony::AMQPConnection }
   let(:message) { 'Bunnies are connies' }
   let(:routing_key) { 'bunny.info' }
@@ -93,16 +93,34 @@ describe Cony::AMQPConnection do
   describe 'setting a connection' do
     let(:existing_connection) { connection_double.clone }
 
-    it 'sets the connection to the given one' do
-      subject.instance.connection = existing_connection
+    describe 'on the AmqpConnection (deprecated)' do
+      it 'sets the connection to the given one' do
+        subject.instance.connection = existing_connection
 
-      expect(subject.instance.connection).to be(existing_connection)
+        expect(subject.instance.connection).to be(existing_connection)
+      end
+
+      it 'raises exception when redefining the connection' do
+        expect(subject.instance.connection).to be(connection_double)
+        expect { subject.instance.connection = existing_connection }.
+          to raise_error(Cony::ValidConnectionAlreadyDefined)
+      end
     end
 
-    it 'raises exception when redefining the connection' do
-      expect(subject.instance.connection).to be(connection_double)
-      expect { subject.instance.connection = existing_connection }.
-        to raise_error(Cony::ValidConnectionAlreadyDefined)
+    describe 'through the config' do
+      let(:config) do
+        double('Cony Config', amqp: amqp_config, durable: false, amqp_connection: existing_connection)
+      end
+
+      it 'uses the connection from the config' do
+        expect(subject.instance.connection).to be(existing_connection)
+      end
+
+      it 'raises exception when redefining the connection' do
+        expect(subject.instance.connection).to be(existing_connection)
+        expect { subject.instance.connection = existing_connection }.
+          to raise_error(Cony::ValidConnectionAlreadyDefined)
+      end
     end
   end
 end
