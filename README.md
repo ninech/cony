@@ -18,6 +18,8 @@ To configure the AMQP-Settings, use an initializer (e.g.
 
 ```ruby
 Cony.configure do |config|
+  config.test_mode = Rails.env.test?
+  # config.durable = false
   config.amqp = {
     host: 'localhost',
     exchange: 'organization.application',
@@ -25,22 +27,10 @@ Cony.configure do |config|
     user: 'username',
     pass: 'secret',
   }
-  config.test_mode = Rails.env.test?
-  # config.durable = false
+  # or:
+  # config.amqp_connection = my_existing_bunny_session
 end
 ```
-
-### Using an existing Bunny connection
-
-You can share your already established `Bunny::Session` with Cony.
-
-```ruby
-Cony::AMQPConnection.instance.connection = your_connection
-```
-
-Cony will only accept the given connection if it's current connection is closed or if there is no current
-connection. There will be an error if Cony already has a connection!
-This restriction is imposed because else Cony might leak connections.
 
 ## Getting Started
 

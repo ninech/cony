@@ -13,6 +13,8 @@ require 'cony/active_record'
 # To configure Cony:
 # <code>
 # Cony.configure do |config|
+#   config.test_mode = Rails.env.test?
+#   # config.durable = false
 #   config.amqp = {
 #     host: 'localhost',
 #     exchange: 'organization.application',
@@ -20,8 +22,8 @@ require 'cony/active_record'
 #     user: 'username',
 #     pass: 'secret',
 #   }
-#   config.test_mode = Rails.env.test?
-#   # config.durable = false
+#   # or:
+#   # config.amqp_connection = my_existing_bunny_session
 # end
 # </code>
 module Cony
