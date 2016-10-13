@@ -32,7 +32,6 @@ module Cony
 
     ##
     # Sets a custom connection if no valid_connection? is already provided
-    # :deprecated: Use the Cony Initializer
     def connection=(connection)
       fail Cony::ValidConnectionAlreadyDefined, 'A connection has already been set.' if valid_connection_present?
       @connection = connection
@@ -43,9 +42,7 @@ module Cony
     def connection
       return @connection if valid_connection_present?
 
-      return @connection = Cony.config.amqp_connection unless Cony.config.amqp_connection.nil?
-
-      @connection = Bunny.new(Cony.config.amqp)
+      @connection = Bunny.new Cony.config.amqp
       ObjectSpace.define_finalizer(self, proc { cleanup })
       @connection.start
     end
