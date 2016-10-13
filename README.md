@@ -30,17 +30,6 @@ Cony.configure do |config|
 end
 ```
 
-### Using an existing Bunny connection
-
-You can share your already established `Bunny::Session` with Cony.
-
-```ruby
-Cony::AMQPConnection.instance.connection = your_connection
-```
-
-Cony will only accept the given connection if it's current connection is closed or if there is no current
-connection. There will be an error if Cony already has a connection!
-This restriction is imposed because else Cony might leak connections.
 
 ## Getting Started
 
@@ -75,7 +64,7 @@ The sent JSON structure will look like this:
     { "description": { "old": null, "new": "value" } }
   ],
   "event": "created",
-  "model": "Example::Model"
+  "model": "Example::Model",
 }
 ```
 
@@ -94,7 +83,7 @@ The sent JSON structure will look like this:
     { "name": { "old": "old-value", "new": "new-value" } }
   ],
   "event": "updated",
-  "model": "Example::Model"
+  "model": "Example::Model",
 }
 ```
 
@@ -113,7 +102,7 @@ The sent JSON structure will look like this:
     { "name": { "old": "value", "new": null } }
   ],
   "event": "destroyed",
-  "model": "Example::Model"
+  "model": "Example::Model",
 }
 ```
 
