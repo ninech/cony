@@ -33,5 +33,4 @@ module Cony
   }
 
   self.config.merge! defaults.deep_dup
-
 end

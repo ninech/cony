@@ -3,7 +3,6 @@ require 'json'
 
 module Cony
   class AMQPConnectionHandler
-
     def initialize(config)
       @config = config
     end
@@ -23,6 +22,5 @@ module Cony
       Airbrake.notify(error) if defined?(Airbrake)
       Rails.logger.error("#{error.class}: #{error}") if defined?(Rails)
     end
-
   end
 end

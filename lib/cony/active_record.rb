@@ -14,7 +14,6 @@ module Cony
   # </code>
   #
   module ActiveRecord
-
     extend ActiveSupport::Concern
 
     included do
@@ -43,13 +42,14 @@ module Cony
     end
 
     private
+
     def cony_amqp_connection
       @cony_amqp_connection ||= Cony::AMQPConnectionHandler.new(Cony.config.amqp)
     end
 
     def cony_mapped_changes
       changes.map do |name, change|
-        {name => {old: change.first, new: change.last}}
+        { name => { old: change.first, new: change.last } }
       end
     end
 
@@ -63,12 +63,12 @@ module Cony
 
     def cony_changes_destroyed
       attributes.map do |name, value|
-        {name => {old: value, new: nil}}
+        { name => { old: value, new: nil } }
       end
     end
 
     def cony_notify_hash
-      {id: self.id, changes: @cony_notify[:changes], model: self.class.name, event: @cony_notify[:event]}
+      { id: self.id, changes: @cony_notify[:changes], model: self.class.name, event: @cony_notify[:event] }
     end
 
     def cony_notify_routing_key

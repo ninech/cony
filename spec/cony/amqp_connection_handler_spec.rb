@@ -4,8 +4,7 @@ require 'ostruct'
 require 'cony/amqp_connection_handler'
 
 describe Cony::AMQPConnectionHandler do
-
-  let(:config) { {exchange: 'bunny-tests'} }
+  let(:config) { { exchange: 'bunny-tests' } }
   let(:handler) { Cony::AMQPConnectionHandler.new(config) }
   let(:message) { 'Bunnies are connies' }
   let(:routing_key) { 'bunny.info' }
@@ -49,8 +48,8 @@ describe Cony::AMQPConnectionHandler do
       persistent: false,
       content_type: 'application/json',
     }
-    expect(exchange_double).to receive(:publish)
-      .with('"Bunnies are connies"', publish_options)
+    expect(exchange_double).to receive(:publish).
+      with('"Bunnies are connies"', publish_options)
     subject.publish(message, routing_key)
   end
 
@@ -68,7 +67,7 @@ describe Cony::AMQPConnectionHandler do
         stub_const('Rails', OpenStruct.new(logger: double('Railslogger')))
       end
       it 'logs an error' do
-        expect(Rails.logger).to receive(:error).with("RuntimeError: I failed so hard")
+        expect(Rails.logger).to receive(:error).with('RuntimeError: I failed so hard')
         subject.publish(message, routing_key)
       end
     end
@@ -83,5 +82,4 @@ describe Cony::AMQPConnectionHandler do
       end
     end
   end
-
 end
