@@ -9,6 +9,21 @@ require 'active_support/configurable'
 
 require 'cony/active_record'
 
+##
+# To configure Cony:
+# <code>
+# Cony.configure do |config|
+#   config.amqp = {
+#     host: 'localhost',
+#     exchange: 'organization.application',
+#     ssl: true,
+#     user: 'username',
+#     pass: 'secret',
+#   }
+#   config.test_mode = Rails.env.test?
+#   # config.durable = false
+# end
+# </code>
 module Cony
   include ActiveSupport::Configurable
 
@@ -18,5 +33,4 @@ module Cony
   }
 
   self.config.merge! defaults.deep_dup
-
 end
