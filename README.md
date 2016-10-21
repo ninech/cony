@@ -108,7 +108,7 @@ The sent JSON structure will look like this:
 
 ## About
 
-This Gem is currently maintained and funded by [nine.ch](https://nine.ch).
+This gem is currently maintained and funded by [nine.ch](https://nine.ch).
 
 [![nine.ch](https://blog.nine.ch/assets/logo.png)](https://nine.ch)
 
