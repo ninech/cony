@@ -38,6 +38,7 @@ module Cony
 
     def cony_publish
       return if Cony.config.test_mode
+      return if @cony_notify.nil?
       cony_amqp_connection.publish(cony_notify_hash, cony_notify_routing_key)
     end
 
@@ -68,7 +69,7 @@ module Cony
     end
 
     def cony_notify_hash
-      { id: self.id, changes: @cony_notify[:changes], model: self.class.name, event: @cony_notify[:event] }
+      { id: id, changes: @cony_notify[:changes], model: self.class.name, event: @cony_notify[:event] }
     end
 
     def cony_notify_routing_key

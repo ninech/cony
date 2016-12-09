@@ -68,6 +68,14 @@ describe Cony::ActiveRecord do
     end
   end
 
+  describe '#cony_publish' do
+    let(:event) { :updated }
+    it 'calls cony_publish without @cony_notify' do
+      expect(amqp_connection).not_to receive(:publish).with(expected_payload, 'anonymaus/klass.mutation.updated')
+      subject.cony_publish
+    end
+  end
+
   context 'test mode enabled' do
     before do
       allow(Cony.config).to receive(:test_mode).and_return(true)
