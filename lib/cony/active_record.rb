@@ -49,7 +49,7 @@ module Cony
     end
 
     def cony_mapped_changes
-      changes.map do |name, change|
+      saved_changes.map do |name, change|
         { name => { old: change.first, new: change.last } }
       end
     end
