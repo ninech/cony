@@ -76,17 +76,11 @@ describe 'Integration' do
 
       it 'contains the changes' do
         expect(amqp_connection).to receive(:publish) do |payload, key|
-          expect(payload[:changes]).to include({"id"=>{old: nil, new: subject.id}})
-          expect(payload[:changes]).to include({"title"=>{old: nil, new: title}})
-          expect(payload[:changes]).to include({"num"=>{old: nil, new: num}})
-        end
-
-        subject.save
-      end
-
-      it 'contains the only the changes' do
-        expect(amqp_connection).to receive(:publish) do |payload, key|
-          expect(payload[:changes].count).to eq(3)
+          expect(payload[:changes]).to match_array([
+            {"id"=>{old: nil, new: subject.id}},
+            {"title"=>{old: nil, new: title}},
+            {"num"=>{old: nil, new: num}}
+          ])
         end
 
         subject.save
@@ -143,16 +137,7 @@ describe 'Integration' do
 
       it 'contains the changes' do
         expect(amqp_connection).to receive(:publish) do |payload, key|
-          expect(payload[:changes]).to include({"title"=>{old: title, new: new_title}})
-        end
-
-        subject.title = new_title
-        subject.save
-      end
-
-      it 'contains the only the changes' do
-        expect(amqp_connection).to receive(:publish) do |payload, key|
-          expect(payload[:changes].count).to eq(1)
+          expect(payload[:changes]).to match_array([{"title"=>{old: title, new: new_title}}])
         end
 
         subject.title = new_title
@@ -204,17 +189,11 @@ describe 'Integration' do
 
       it 'contains the changes' do
         expect(amqp_connection).to receive(:publish) do |payload, key|
-          expect(payload[:changes]).to include({"id"=>{old: subject.id, new: nil}})
-          expect(payload[:changes]).to include({"title"=>{old: title, new: nil}})
-          expect(payload[:changes]).to include({"num"=>{old: num, new: nil}})
-        end
-
-        subject.destroy
-      end
-
-      it 'contains the only the changes' do
-        expect(amqp_connection).to receive(:publish) do |payload, key|
-          expect(payload[:changes].count).to eq(3)
+          expect(payload[:changes]).to match_array([
+            {"id"=>{old: subject.id, new: nil}},
+            {"title"=>{old: title, new: nil}},
+            {"num"=>{old: num, new: nil}}
+          ])
         end
 
         subject.destroy
