@@ -201,6 +201,7 @@ describe 'Integration' do
 
         subject.destroy
       end
+
       it 'contains the changes' do
         expect(amqp_connection).to receive(:publish) do |payload, key|
           expect(payload[:changes]).to include({"id"=>{old: subject.id, new: nil}})
@@ -218,7 +219,6 @@ describe 'Integration' do
 
         subject.destroy
       end
-
     end
   end
 end
