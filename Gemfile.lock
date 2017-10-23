@@ -2,10 +2,8 @@ PATH
   remote: .
   specs:
     cony (2.2.3)
-      activerecord (>= 5.1)
       activesupport (>= 5.1)
       bunny (~> 2.6)
-      sqlite3
 
 GEM
   remote: https://rubygems.org/
@@ -53,9 +51,11 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  activerecord (>= 5.1)
   cony!
   rake (~> 11.0)
   rspec (~> 3.0)
+  sqlite3
 
 BUNDLED WITH
    1.12.5
