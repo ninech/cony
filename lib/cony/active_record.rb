@@ -48,8 +48,13 @@ module Cony
       @cony_amqp_connection ||= Cony::AMQPConnectionHandler.new(Cony.config.amqp)
     end
 
+    def cony_changes
+      return saved_changes if respond_to? :saved_changes
+      changes
+    end
+
     def cony_mapped_changes
-      changes.map do |name, change|
+      cony_changes.map do |name, change|
         { name => { old: change.first, new: change.last } }
       end
     end

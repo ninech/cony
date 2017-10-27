@@ -5,9 +5,9 @@ Cony sends notifications about the lifecycle of your models via AMQP.
 
 ## Setup
 
-### Rails 3 & 4
+### Rails 3, 4 & 5
 
-In Rails 3 and 4, add this to your Gemfile and run the bundle command.
+In Rails 3, 4 and 5.0, add this to your Gemfile and run the bundle command.
 
 ```ruby
 gem 'cony'

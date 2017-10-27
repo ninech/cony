@@ -26,7 +26,7 @@ describe Cony::ActiveRecord do
         def self.after_commit(callback); end
         def self.name; "Anonymaus::Klass"; end
         def id; #{id}; end
-        def changes; #{active_record_changes}; end
+        def saved_changes; #{active_record_changes}; end
         def attributes; #{active_record_attributes}; end
 
         include Cony::ActiveRecord
