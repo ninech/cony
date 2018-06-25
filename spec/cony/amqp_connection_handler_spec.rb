@@ -72,12 +72,12 @@ describe Cony::AMQPConnectionHandler do
       end
     end
 
-    context 'Airbrake loaded' do
+    context 'Sentry loaded' do
       before do
-        stub_const('Airbrake', double('Airbrake'))
+        stub_const('Raven', double('Raven'))
       end
       it 'sends the error' do
-        expect(Airbrake).to receive(:notify).with(instance_of(RuntimeError))
+        expect(Raven).to receive(:capture_exception).with(instance_of(RuntimeError))
         subject.publish(message, routing_key)
       end
     end
