@@ -19,7 +19,7 @@ module Cony
                          content_type: 'application/json')
       end
     rescue => error
-      Airbrake.notify(error) if defined?(Airbrake)
+      Raven.capture_exception(error) if defined?(Raven)
       Rails.logger.error("#{error.class}: #{error}") if defined?(Rails)
     end
   end
