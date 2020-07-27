@@ -2,12 +2,11 @@
 
 Cony sends notifications about the lifecycle of your models via AMQP.
 
-
 ## Setup
 
-### Rails 3, 4 & 5
+### Rails
 
-In Rails 3, 4 and 5.0, add this to your Gemfile and run the bundle command.
+In Rubo on Rails add this to your Gemfile and run `bundle install`.
 
 ```ruby
 gem 'cony'
@@ -29,7 +28,6 @@ Cony.configure do |config|
   # config.durable = false
 end
 ```
-
 
 ## Getting Started
 
@@ -68,7 +66,6 @@ The sent JSON structure will look like this:
 }
 ```
 
-
 ### Update
 
 An update for a `Example::Model` model will have a routing key of
@@ -86,7 +83,6 @@ The sent JSON structure will look like this:
   "model": "Example::Model",
 }
 ```
-
 
 ### Destroy
 
@@ -109,5 +105,3 @@ The sent JSON structure will look like this:
 ## About
 
 This gem is currently maintained and funded by [nine](https://nine.ch).
-
-[![logo of the company 'nine'](https://logo.apps.at-nine.ch/Dmqied_eSaoBMQwk3vVgn4UIgDo=/trim/500x0/logo_claim.png)](https://www.nine.ch)
